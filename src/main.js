@@ -26,3 +26,6 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#eleme')
+
+// 引入css
+import '../static/css/media.css'
