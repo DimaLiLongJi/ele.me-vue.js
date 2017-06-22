@@ -36,3 +36,5 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
     }
   }
 )
+###2017/6/22
+header写好 浮层CSS sticky footers 内容双向绑定

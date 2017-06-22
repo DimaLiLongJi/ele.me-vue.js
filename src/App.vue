@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <vheader></vheader>
+    <vheader :seller="seller"></vheader>
     <div class="tab border1px">
       <div class="tab-item">
         <!-- <router-link>按照a来设定css -->
@@ -20,11 +20,29 @@
 <script>
 // 导入vheader组件
 import vheader from './components/header/header.vue'
-
+const errOK = 0
 export default {
+  // 数据
+  data () {
+    return {
+      seller: {}
+    }
+  },
+  // 组件
   components: {
     vheader
+  },
+  // 初始化,vue实例被创建之后被调用，因此可以处理一些ajax函数
+  created () {
+    // vue-resource方法ajax
+    this.$http.get('/api/seller').then((response) => {
+      response = response.body // 获得数据，response参数为得到的数据
+      if (response.errno === errOK) {
+        this.seller = response.data
+      }
+    })
   }
+
 }
 </script>
 

@@ -6,3 +6,14 @@
 }
 .border1px{position: relative;}
 .border1px:after{display: block;position: absolute;left: 0;bottom:0;width: 100%;border-top: 1px solid rgba(7,17,27,0.1);content: ' ';}
+
+/*初始css*/
+body,html{
+  line-height: 1;
+  font-weight: 200;
+  font-family: 'PingFang SC','STHeiTiSC-Light','Helvetica-Light',arial;
+}
+
+/*清楚浮动*/
+.clearfix{display: inline-block;}
+.clearfix:after{content: " ";display: block;height: 0;line-height: 0;clear: both;visibility: hidden;}
