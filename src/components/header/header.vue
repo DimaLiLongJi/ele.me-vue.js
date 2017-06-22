@@ -36,7 +36,7 @@
   	<div class="detail" v-show="detailShow">
   	  <div class="detail-wrapper clearfix">
   	  	<div class="detail-main">
-  	  	  <p>{{seller.bulletin}}}</p>
+  	  	  <h1 class="name">{{seller.name}}</h1>
   	  	</div>
   	  </div>
   	  <div class="detail-close">
@@ -103,9 +103,10 @@
   .background{position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: -1;filter: blur(10px);}
   /*浮层 CSS sticky footers*/
   .header .detail{position: fixed;z-index: 100;width: 100%;height: 100%;overflow: auto;background-color: rgba(7,17,27,0.8);top: 0;left: 0;}
-  .header .detail .detail-wrapper{min-height: 100%;}
+  .header .detail .detail-wrapper{min-height: 100%;width: 100%;}
   .header .detail .detail-wrapper .detail-main{margin-top: 64px;padding-bottom:64px; }
-  .header .detail .detail-close {position: relative;width:32px;height: 32px;margin: -64px auto 0 auto;clear: both;}
+  .header .detail .detail-wrapper .detail-main .name{line-height:16px;text-align: center;font-size: 16px;font-weight: 700;margin: 0 auto;}
+  .header .detail .detail-close {position: relative;width:32px;height: 32px;margin: -64px auto 0 auto;clear: both;cursor: pointer;}
 
    /*图标的公共样式*/
    @media (-webkit-min-device-pixel-ratio:3) and (min-device-pixel-ratio:3){
