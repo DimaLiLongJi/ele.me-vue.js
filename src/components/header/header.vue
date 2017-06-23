@@ -32,26 +32,59 @@
   	<div class="background">
   	  <img :src="seller.avatar" width="100%" height="100%">
   	</div>
+
   	<!-- 浮层，CSS Sticky Footer -->
-  	<div class="detail" v-show="detailShow">
-  	  <div class="detail-wrapper clearfix">
-  	  	<div class="detail-main">
-  	  	  <h1 class="name">{{seller.name}}</h1>
-  	  	</div>
-  	  </div>
-  	  <div class="detail-close">
-  	  	<img class="icon-close" src="./close.png" @click="show">
-  	  </div>
-  	</div>
+  	 <transition name="fade">
+  	 	<div class="detail" v-show="detailShow">
+	  	  <div class="detail-wrapper clearfix">
+	  	  	<div class="detail-main">
+	  	  	  <h1 class="name">{{seller.name}}</h1>
+	  	  	  <div class="star-wrapper">
+	            <star :score="seller.score" :size="48"></star>
+	  	  	  </div>
+	  	  	  <!-- <div class="title">
+	  	  	  	<div class="line"></div>
+	  	  	  	<div class="text">优惠信息</div>
+	  	  	  	<div class="line"></div>
+	  	  	  </div> -->
+	  	  	  <contentTitle class="title" :content="content.introduce"></contentTitle>
+	  	  	  <ul v-if="seller.supports" class="supports">
+	  	  	  	<li class="support-item" v-for="i in seller.supports">
+	  	  	  	  <span class="icon" :class="classMap[i.type]"></span>
+	  	  	  	  <span class="text">{{i.description}}</span>
+	  	  	  	</li>
+	  	  	  </ul>
+	  	  	  <contentTitle class="title" :content="content.announcement"></contentTitle>
+	  	  	  <div class="bulletin">
+	  	  	  	<p>{{seller.bulletin}}</p>
+	  	  	  </div>
+	  	  	</div>
+	  	  </div>
+	  	  <div class="detail-close">
+	  	  	<img class="icon-close" src="./close.png" @click="show">
+	  	  </div>
+  	   </div>
+  	 </transition>
+  	
   </div>
 </template>
 
 <script type="text/javascript">
+  import star from '../star/star.vue'
+  import contentTitle from '../contentTitle/contentTitle.vue'
   export default {
     data () {
       return {
-        detailShow: false
+        detailShow: false,
+        content: {
+          introduce: '商品介绍',
+          announcement: '商家公告'
+        }
       }
+    },
+    components: {
+      star: star,
+      contentTitle: contentTitle
     },
     methods: {
       showDetail () {
@@ -61,10 +94,10 @@
         if (this.detailShow) { this.detailShow = false }
       }
     },
-    props: {
+    props: { // 接收来自父元素的数据
       seller: { type: Object } // 此处不能在data注册，在methods中可this.seller this是个vue对象
     },
-    created () {
+    created () { // vue对象创建之后执行
       this.classMap = [
         'decrease1',
         'discount1',
@@ -102,28 +135,54 @@
   /*背景*/
   .background{position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: -1;filter: blur(10px);}
   /*浮层 CSS sticky footers*/
-  .header .detail{position: fixed;z-index: 100;width: 100%;height: 100%;overflow: auto;background-color: rgba(7,17,27,0.8);top: 0;left: 0;}
+  .header .detail{position: fixed;z-index: 100;width: 100%;height: 100%;overflow: auto;top: 0;left: 0;transition: all 0.5s ease;background-color: rgba(7,17,27,0.8);opacity: 1;}
   .header .detail .detail-wrapper{min-height: 100%;width: 100%;}
   .header .detail .detail-wrapper .detail-main{margin-top: 64px;padding-bottom:64px; }
   .header .detail .detail-wrapper .detail-main .name{line-height:16px;text-align: center;font-size: 16px;font-weight: 700;margin: 0 auto;}
+  .star-wrapper{margin-top: 18px;padding: 2px 0;text-align: center;}
+  .header .detail .detail-wrapper .detail-main .title{display:flex;display: -webkit-flex;width: 80%;margin:28px auto 24px auto;border-bottom: none;}
+  .header .detail .detail-wrapper .detail-main .title .line{flex: 1 ;position: relative;top: -6px;border-bottom:1px solid rgba(255,255,255,0.2);}
+  .header .detail .detail-wrapper .detail-main .title .text{padding: 0 12px;font-size: 14px;font-weight: 700px;}
   .header .detail .detail-close {position: relative;width:32px;height: 32px;margin: -64px auto 0 auto;clear: both;cursor: pointer;}
+   .header .detail .supports{width: 80%;margin: 0 auto;}
+   .header .detail .supports .support-item{padding: 0 12px;margin-bottom: 12px;font-size: 0;vertical-align: top;}
+   .header .detail .supports .support-item .icon{display: inline-block;width: 16px;height: 16px;margin-right: 6px;background-size: 16px 16px;background-repeat: no-repeat;}
+   .header .detail .supports .support-item .text{font-size: 12px;font-weight: 200;line-height: 12px;color: rgb(255,255,255);}
+   .header .detail .detail-wrapper .detail-main .bulletin{width: 80%;margin: 0 auto;}
+   .header .detail .detail-wrapper .detail-main .bulletin p{font-size: 12px;padding: 0 12px;line-height: 24px;vertical-align: top;}
 
    /*图标的公共样式*/
    @media (-webkit-min-device-pixel-ratio:3) and (min-device-pixel-ratio:3){
     .bg_image{background-image: url("./brand@3x.png");}
-    .decrease1{background-image: url("./sellIcon/decrease_1@3x.png"); }
-   .discount1{background-image: url("./sellIcon/discount_1@3x.png");}
-   .guarantee1{background-image: url("./sellIcon/guarantee_1@3x.png");}
-   .invoice1{background-image: url("./sellIcon/invoice_1@3x.png");}
-   .special1{background-image: url("./sellIcon/special_1@3x.png");}
+    /*展示层icon*/
+    .content-wrapper .decrease1{background-image: url("./sellIcon/decrease_1@3x.png"); }
+   .content-wrapper .discount1{background-image: url("./sellIcon/discount_1@3x.png");}
+   .content-wrapper .guarantee1{background-image: url("./sellIcon/guarantee_1@3x.png");}
+   .content-wrapper .invoice1{background-image: url("./sellIcon/invoice_1@3x.png");}
+   .content-wrapper .special1{background-image: url("./sellIcon/special_1@3x.png");}
    .bulletin-title{background-image: url("./bulletin@3x.png");}
    }
-
+  /*展示层icon*/
   .bg_image{background-image: url("./brand@2x.png");} 
-   .decrease1{background-image: url("./sellIcon/decrease_1@2x.png"); }
-   .discount1{background-image: url("./sellIcon/discount_1@2x.png");}
-   .guarantee1{background-image: url("./sellIcon/guarantee_1@2x.png");}
-   .invoice1{background-image: url("./sellIcon/invoice_1@2x.png");}
-   .special1{background-image: url("./sellIcon/special_1@2x.png");}
-   .icon-close{display: block;width: 32px;height: 32px;}
+  .content-wrapper .decrease1{background-image: url("./sellIcon/decrease_1@2x.png"); }
+  .content-wrapper .discount1{background-image: url("./sellIcon/discount_1@2x.png");}
+  .content-wrapper .guarantee1{background-image: url("./sellIcon/guarantee_1@2x.png");}
+  .content-wrapper .invoice1{background-image: url("./sellIcon/invoice_1@2x.png");}
+  .content-wrapper .special1{background-image: url("./sellIcon/special_1@2x.png");}
+  .icon-close{display: block;width: 32px;height: 32px;}
+  
+  /*浮层icon*/
+  .header .detail .supports .support-item .decrease1{background-image: url("./sellIcon/decrease_1@2x.png"); }
+  .header .detail .supports .support-item .discount1{background-image: url("./sellIcon/discount_1@2x.png");}
+  .header .detail .supports .support-item .guarantee1{background-image: url("./sellIcon/guarantee_1@2x.png");}
+  .header .detail .supports .support-item .invoice1{background-image: url("./sellIcon/invoice_1@2x.png");}
+  .header .detail .supports .support-item .special1{background-image: url("./sellIcon/special_1@2x.png");}
+
+  /*vue动画*/
+   .fade-enter-active,.fade-leave-active{
+   	 transition: all 0.5s ease;
+   }
+   .fade-enter, .fade-leave-active {
+   	 opacity: 0;background-color: rgba(7,17,27,0);
+   }
 </style>
