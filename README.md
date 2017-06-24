@@ -22,8 +22,10 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 ###2017/6/19
 创建框架，更改目录结构，写好路由
 ./bulid/dev-serve.js --moc模拟数据，出口为 /api/xxx
+
 ###2017/6/20
 引入vue-router2.0 并学习1.0写法，写到border1px的缩放明天写
+
 ###2017/6/21
 写完公共样式border1px;
 引入vue-resource,(
@@ -36,8 +38,13 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
     }
   }
 )
+
 ###2017/6/22
 header写好 浮层CSS sticky footers 内容双向绑定
+
 ###2017/6/23
 算法实现star依据seller.score计算
 疯涨star.vue和title.vue
+
+###2017/6/24
+goods.vue初始化
