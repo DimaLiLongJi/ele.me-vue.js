@@ -99,11 +99,11 @@
     },
     created () { // vue对象创建之后执行
       this.classMap = [
-        'decrease1',
-        'discount1',
-        'special1',
-        'invoice1',
-        'guarantee1'
+        'decrease',
+        'discount',
+        'special',
+        'invoice',
+        'guarantee'
       ]
     }
   }
@@ -155,28 +155,34 @@
    @media (-webkit-min-device-pixel-ratio:3) and (min-device-pixel-ratio:3){
     .bg_image{background-image: url("./brand@3x.png");}
     /*展示层icon*/
-    .content-wrapper .decrease1{background-image: url("./sellIcon/decrease_1@3x.png"); }
-   .content-wrapper .discount1{background-image: url("./sellIcon/discount_1@3x.png");}
-   .content-wrapper .guarantee1{background-image: url("./sellIcon/guarantee_1@3x.png");}
-   .content-wrapper .invoice1{background-image: url("./sellIcon/invoice_1@3x.png");}
-   .content-wrapper .special1{background-image: url("./sellIcon/special_1@3x.png");}
+    .content-wrapper .decrease{background-image: url("./sellIcon/decrease_1@3x.png"); }
+   .content-wrapper .discount{background-image: url("./sellIcon/discount_1@3x.png");}
+   .content-wrapper .guarantee{background-image: url("./sellIcon/guarantee_1@3x.png");}
+   .content-wrapper .invoice{background-image: url("./sellIcon/invoice_1@3x.png");}
+   .content-wrapper .special{background-image: url("./sellIcon/special_1@3x.png");}
    .bulletin-title{background-image: url("./bulletin@3x.png");}
+   .header .detail .supports .support-item .decrease{background-image: url("./sellIcon/decrease_1@3x.png"); }
+  .header .detail .supports .support-item .discount{background-image: url("./sellIcon/discount_1@3x.png");}
+  .header .detail .supports .support-item .guarantee{background-image: url("./sellIcon/guarantee_1@3x.png");}
+  .header .detail .supports .support-item .invoice{background-image: url("./sellIcon/invoice_1@3x.png");}
+  .header .detail .supports .support-item .special{background-image: url("./sellIcon/special_1@3x.png");}
+
    }
   /*展示层icon*/
   .bg_image{background-image: url("./brand@2x.png");} 
-  .content-wrapper .decrease1{background-image: url("./sellIcon/decrease_1@2x.png"); }
-  .content-wrapper .discount1{background-image: url("./sellIcon/discount_1@2x.png");}
-  .content-wrapper .guarantee1{background-image: url("./sellIcon/guarantee_1@2x.png");}
-  .content-wrapper .invoice1{background-image: url("./sellIcon/invoice_1@2x.png");}
-  .content-wrapper .special1{background-image: url("./sellIcon/special_1@2x.png");}
+  .content-wrapper .decrease{background-image: url("./sellIcon/decrease_1@2x.png"); }
+  .content-wrapper .discount{background-image: url("./sellIcon/discount_1@2x.png");}
+  .content-wrapper .guarantee{background-image: url("./sellIcon/guarantee_1@2x.png");}
+  .content-wrapper .invoice{background-image: url("./sellIcon/invoice_1@2x.png");}
+  .content-wrapper .special{background-image: url("./sellIcon/special_1@2x.png");}
   .icon-close{display: block;width: 32px;height: 32px;}
   
   /*浮层icon*/
-  .header .detail .supports .support-item .decrease1{background-image: url("./sellIcon/decrease_1@2x.png"); }
-  .header .detail .supports .support-item .discount1{background-image: url("./sellIcon/discount_1@2x.png");}
-  .header .detail .supports .support-item .guarantee1{background-image: url("./sellIcon/guarantee_1@2x.png");}
-  .header .detail .supports .support-item .invoice1{background-image: url("./sellIcon/invoice_1@2x.png");}
-  .header .detail .supports .support-item .special1{background-image: url("./sellIcon/special_1@2x.png");}
+  .header .detail .supports .support-item .decrease{background-image: url("./sellIcon/decrease_1@2x.png"); }
+  .header .detail .supports .support-item .discount{background-image: url("./sellIcon/discount_1@2x.png");}
+  .header .detail .supports .support-item .guarantee{background-image: url("./sellIcon/guarantee_1@2x.png");}
+  .header .detail .supports .support-item .invoice{background-image: url("./sellIcon/invoice_1@2x.png");}
+  .header .detail .supports .support-item .special{background-image: url("./sellIcon/special_1@2x.png");}
 
   /*vue动画*/
    .fade-enter-active,.fade-leave-active{

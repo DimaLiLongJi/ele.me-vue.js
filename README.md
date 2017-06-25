@@ -48,3 +48,7 @@ header写好 浮层CSS sticky footers 内容双向绑定
 
 ###2017/6/24
 goods.vue初始化
+
+###2017/6/25
+better-scroll引入
+new BScroll(this.$refs.XXX , {参数} )

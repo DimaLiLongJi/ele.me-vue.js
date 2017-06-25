@@ -26,7 +26,6 @@
         for (let i = 0; i < integer; i++) { result.push(CLS_ON) }
         if (hasDecimal) { result.push(CLS_HALF) }
         while (result.length < LENGTH) { result.push(CLS_OFF) }
-        console.log(result)
         return result
       }
     }
