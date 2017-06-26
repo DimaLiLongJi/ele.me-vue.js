@@ -4,7 +4,7 @@
 	<div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <!-- v-for="(vaule,index) in XXX" 事件为$event -->
-        <li v-for="(i,index) in goods" class="menu-item" :class="{current: currentIndex===index}" @click="selectMenu(index,$event)">
+        <li v-for="(i,index) in goods" class="menu-item" :class="{current: currentIndex===index}" @click="selectMenu(index,$event)" ref="goodMenu">
           <span class="text border1px"><span v-show="i.type>0" class="icon" :class="classMap[i.type]"></span>{{i.name}}</span>
         </li>
       </ul>
@@ -53,7 +53,7 @@
     props: {
       seller: { type: Object }
     },
-    computed: {
+    computed: { // 实时计算
       currentIndex () {
         for (let i = 0; i < this.listHeight.length; i++) {
           let h1 = this.listHeight[i]
@@ -61,6 +61,7 @@
           if (!h2 || (this.scrollY >= h1 && this.scrollY < h2)) {
             return i
           }
+          if (this.scrollY >= 0 && this.scrollY < this.listHeight[1]) { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 200) } else { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 200) }
         }
         return 0
       }
