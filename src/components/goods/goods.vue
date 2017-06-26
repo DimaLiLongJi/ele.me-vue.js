@@ -3,7 +3,8 @@
     <!-- 左侧滚动列表 -->
 	<div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="i in goods" class="menu-item">
+        <!-- v-for="(vaule,index) in XXX" 事件为$event -->
+        <li v-for="(i,index) in goods" class="menu-item" :class="{current: currentIndex===index}" @click="selectMenu(index,$event)">
           <span class="text border1px"><span v-show="i.type>0" class="icon" :class="classMap[i.type]"></span>{{i.name}}</span>
         </li>
       </ul>
@@ -11,7 +12,7 @@
     <!-- 右侧食品列表 -->
 	<div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="i in goods" class="food-list">
+        <li v-for="i in goods" class="food-list" ref="foodList">
           <h1 class="title">{{i.name}}</h1>
           <ul>
             <!-- 具体食物 -->
@@ -44,18 +45,54 @@
   export default {
     data () {
       return {
-        goods: []
+        goods: [],
+        listHeight: [], // 用来存储右侧滚动区每个区间间的高度
+        scrollY: 0 // 监听右侧滚动的y轴
       }
     },
     props: {
       seller: { type: Object }
     },
+    computed: {
+      currentIndex () {
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let h1 = this.listHeight[i]
+          let h2 = this.listHeight[i + 1]
+          if (!h2 || (this.scrollY >= h1 && this.scrollY < h2)) {
+            return i
+          }
+        }
+        return 0
+      }
+    },
     methods: {
       _initScroll () {
       // this.$els.XXX 是vue的dom获取v-el:XXX
       // vue2 是 this.$refs.xxx ref="xxx"
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {})
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, { click: true })
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { probeType: 3 }) // 在滚动的时候告诉滚动位置
+        // .on('事件' ,回调)
+        this.foodsScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y)) // 位置的变化传入y中
+          // console.log(pos) Object{x:,y:}
+        })
+      },
+      _calculateHeight () {
+        // 获取每个li的高度然后添加进 listHeight数组中
+        let foodList = this.$refs.foodList
+        let height = 0
+        this.listHeight.push(height)
+        for (let i = 0; i < foodList.length; i++) {
+          let item = foodList[i]
+          height += item.clientHeight
+          this.listHeight.push(height)
+        }
+      },
+      selectMenu (i, event) {
+        if (!event._constructed) { return } // pc无派发事件 此为使pc与移动端一样点击会动
+        let foodList = this.$refs.foodList
+        let el = foodList[i]
+        this.foodsScroll.scrollToElement(el, 300) // BScroll.scrollToElement(显示的li,time)  BScroll=new BScroll(整个div,{click:true,probeType:3}) 可以点击并监听
       }
     },
     created () { // 创建vue实例后出发
@@ -64,7 +101,10 @@
         if (response.errno === errOK) {
           this.goods = response.data
           // this.$nextTick(() => {})解决异步加载
-          this.$nextTick(() => { this._initScroll() })
+          this.$nextTick(() => {
+            this._initScroll()
+            this._calculateHeight()
+          })
         }
       })
       this.classMap = [
@@ -118,4 +158,8 @@
 	.menu-item .invoice{background-image: url("./sellIcon/invoice_3@3x.png");}
 	.menu-item .special{background-image: url("./sellIcon/special_3@3x.png");}
 }
+.current{
+	position: relative;z-index: 10;margin-top:-1px;background: #fff;font-weight: 700;
+}
+.current .text{border: none;}
 </style>

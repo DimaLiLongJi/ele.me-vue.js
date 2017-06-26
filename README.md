@@ -52,3 +52,6 @@ goods.vue初始化
 ###2017/6/25
 better-scroll引入
 new BScroll(this.$refs.XXX , {参数} )
+
+###2017/6/19
+菜单左右联动写好.下一步购物车组件
