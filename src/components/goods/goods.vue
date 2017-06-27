@@ -1,46 +1,54 @@
 <template>
   <div class="goods">
     <!-- 左侧滚动列表 -->
-	<div class="menu-wrapper" ref="menuWrapper">
-      <ul>
-        <!-- v-for="(vaule,index) in XXX" 事件为$event -->
-        <li v-for="(i,index) in goods" class="menu-item" :class="{current: currentIndex===index}" @click="selectMenu(index,$event)" ref="goodMenu">
-          <span class="text border1px"><span v-show="i.type>0" class="icon" :class="classMap[i.type]"></span>{{i.name}}</span>
-        </li>
-      </ul>
-	</div>
-    <!-- 右侧食品列表 -->
-	<div class="foods-wrapper" ref="foodsWrapper">
-      <ul>
-        <li v-for="i in goods" class="food-list" ref="foodList">
-          <h1 class="title">{{i.name}}</h1>
-          <ul>
-            <!-- 具体食物 -->
-          	<li v-for="food in i.foods" class="food-item border1px">
-          	  <div class="icon">
-          	  	<img :src="food.icon" width="57" height="57">
-          	  </div>
-          	  <div class="content">
-          	  	<h2 class="name">{{food.name}}</h2>
-          	  	<p class="desc">{{food.description}}</p>
-          	  	<div class="extra">
-          	  	  <span class="count">月售{{food.sellCount}}份</span><span class="">好评率:{{food.rating}}%</span>
-          	  	</div>
-          	  	<div class="price">
-          	  	  <span class="now">&yen;{{food.price}}</span><span class="old" v-show="food.oldPrice">&yen;{{food.oldPrice}}</span>
-          	  	</div>
-          	  </div>
-          	</li>
-          </ul>
-        </li>
-      </ul>
-	</div>
+  	<div class="menu-wrapper" ref="menuWrapper">
+        <ul>
+          <!-- v-for="(vaule,index) in XXX" 事件为$event -->
+          <li v-for="(i,index) in goods" class="menu-item" :class="{current: currentIndex===index}" @click="selectMenu(index,$event)" ref="goodMenu">
+            <span class="text border1px"><span v-show="i.type>0" class="icon" :class="classMap[i.type]"></span>{{i.name}}</span>
+          </li>
+        </ul>
+  	</div>
+      <!-- 右侧食品列表 -->
+  	<div class="foods-wrapper" ref="foodsWrapper">
+        <ul>
+          <li v-for="i in goods" class="food-list" ref="foodList">
+            <h1 class="title">{{i.name}}</h1>
+            <ul>
+              <!-- 具体食物 -->
+            	<li v-for="food in i.foods" class="food-item border1px">
+            	  <div class="icon">
+            	  	<img :src="food.icon" width="57" height="57">
+            	  </div>
+            	  <div class="content">
+            	  	<h2 class="name">{{food.name}}</h2>
+            	  	<p class="desc">{{food.description}}</p>
+            	  	<div class="extra">
+            	  	  <span class="count">月售{{food.sellCount}}份</span><span class="">好评率:{{food.rating}}%</span>
+            	  	</div>
+            	  	<div class="price">
+            	  	  <span class="now">&yen;{{food.price}}</span><span class="old" v-show="food.oldPrice">&yen;{{food.oldPrice}}</span>
+            	  	</div>
+                  <!-- 点击购买数量按钮 -->
+                  <div class="cartcontrol-wrapper">
+                    <cartcontrol :food="food"></cartcontrol>
+                  </div>
+            	  </div>
+            	</li>
+            </ul>
+          </li>
+        </ul>
+  	</div>
+    <!-- 购物车组件 -->
+    <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcar>
   </div>
   
 </template>
 
 <script type="text/javascript">
   import BScroll from 'better-scroll'
+  import shopcar from '../shopcar/shopcar.vue'
+  import cartcontrol from '../cartControl/cartControl.vue'
   const errOK = 0
   export default {
     data () {
@@ -49,6 +57,10 @@
         listHeight: [], // 用来存储右侧滚动区每个区间间的高度
         scrollY: 0 // 监听右侧滚动的y轴
       }
+    },
+    components: {
+      shopcar: shopcar,
+      cartcontrol: cartcontrol
     },
     props: {
       seller: { type: Object }
@@ -61,7 +73,7 @@
           if (!h2 || (this.scrollY >= h1 && this.scrollY < h2)) {
             return i
           }
-          if (this.scrollY >= 0 && this.scrollY < this.listHeight[1]) { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 200) } else { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 200) }
+          // if (this.scrollY >= 0 && this.scrollY < this.listHeight[1]) { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 100) } else { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 100) }
         }
         return 0
       }
@@ -71,7 +83,10 @@
       // this.$els.XXX 是vue的dom获取v-el:XXX
       // vue2 是 this.$refs.xxx ref="xxx"
         this.menuScroll = new BScroll(this.$refs.menuWrapper, { click: true })
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { probeType: 3 }) // 在滚动的时候告诉滚动位置
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          probeType: 3,
+          click: true
+        }) // 在滚动的时候告诉滚动位置
         // .on('事件' ,回调)
         this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y)) // 位置的变化传入y中
@@ -145,6 +160,8 @@
 .goods .foods-wrapper .food-item .content .price .old{
 	text-decoration: line-through;font-size: 10px;color:rgb(147,153,159); 
 }
+/*购买按钮*/
+.cartcontrol-wrapper{position: absolute;right: 0;bottom: 12px;}
 
 /*公共样式*/
 .menu-item .decrease{background-image: url("./sellIcon/decrease_3@2x.png"); }
