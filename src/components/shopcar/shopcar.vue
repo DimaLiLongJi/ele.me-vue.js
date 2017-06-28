@@ -5,7 +5,7 @@
   	  <div class="content-left">
   	  	<div class="logo-wrapper">
   	  	  <div class="logo">  <!-- wrapper为 -->
-  	  	  	<i :class="[{'full': totalCount>0},{'empty': totalCount=0}]" width="44" height="44"></i>
+  	  	  	<i :class="[{'full': totalCount>0},{'empty': totalCount==0}]" width="44" height="44"></i>
   	  	  </div>
   	  	  <div class="num">{{totalCount}}</div>
   	  	</div>
