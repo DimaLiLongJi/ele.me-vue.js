@@ -5,7 +5,7 @@
   	  <div class="content-left">
   	  	<div class="logo-wrapper">
   	  	  <div class="logo">  <!-- wrapper为 -->
-  	  	  	<i :class="[{'full': totalCount>0},{'empty': totalCount=0}]" width="44" height="44"></i>
+  	  	  	<i :class="[{'full': totalCount>0},{'empty': totalCount==0}]" width="44" height="44"></i>
   	  	  </div>
   	  	  <div class="num">{{totalCount}}</div>
   	  	</div>
@@ -36,7 +36,7 @@
         default () {
           return [
             // {
-            //   count: 3,
+            //   count: 0,
             //   price: 200
             // }
           ]
@@ -47,7 +47,8 @@
       totalPrice () { // 计算总价格的一个函数
         let total = 0 // 首选定义一个总价钱
         this.selectFoods.forEach((i) => {
-          total += i.price * i.count  // array.forEach(function (e){e}) 循环数组中的值 累加到total中 可以直接用里面的值,i为每次循环出的i的value
+          if (i.count) { total += i.price * i.count }
+          // array.forEach(function (e){e}) 循环数组中的值 累加到total中 可以直接用里面的值,i为每次循环出的i的value
         })
         console.log({ 'total': total })
         return total
@@ -58,7 +59,7 @@
       totalCount () {
         let count = 0
         this.selectFoods.forEach((i) => {
-          count += i.count
+          if (i.count) { count += i.count }
         })
         // if (count > 0) { this.src = './shopcarFull.png' } else { this.src = './shopcarEmpty.png' }
         // this.countNum = count
@@ -78,7 +79,6 @@
 .empty{background-image: url('./shopcarEmpty.png');}
 /*结算改变*/
 .toBuy{background-color: #00b43c;color: #fff;height:48px;line-height:48px;text-align:center;font-size:12px;}
-
 .shopCar{position: fixed;left: 0;bottom: 0;width: 100%;z-index: 50;height: 48px;}
 .shopCar .content{display: flex;background: #141d27;font-size: 0;}
 .shopCar .content .content-left{flex: 1;}

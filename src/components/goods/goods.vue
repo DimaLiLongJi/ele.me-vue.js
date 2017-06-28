@@ -15,23 +15,23 @@
           <li v-for="i in goods" class="food-list" ref="foodList">
             <h1 class="title">{{i.name}}</h1>
             <ul>
-              <!-- 具体食物 -->
-            	<li v-for="food in i.foods" class="food-item border1px">
+              <!-- 具体食物 j为.foods的循环 i.foods为里面的吃的-->
+            	<li v-for="j in i.foods" class="food-item border1px">
             	  <div class="icon">
-            	  	<img :src="food.icon" width="57" height="57">
+            	  	<img :src="j.icon" width="57" height="57">
             	  </div>
             	  <div class="content">
-            	  	<h2 class="name">{{food.name}}</h2>
-            	  	<p class="desc">{{food.description}}</p>
+            	  	<h2 class="name">{{j.name}}</h2>
+            	  	<p class="desc">{{j.description}}</p>
             	  	<div class="extra">
-            	  	  <span class="count">月售{{food.sellCount}}份</span><span class="">好评率:{{food.rating}}%</span>
+            	  	  <span class="count">月售{{j.sellCount}}份</span><span class="">好评率:{{j.rating}}%</span>
             	  	</div>
             	  	<div class="price">
-            	  	  <span class="now">&yen;{{food.price}}</span><span class="old" v-show="food.oldPrice">&yen;{{food.oldPrice}}</span>
+            	  	  <span class="now">&yen;{{j.price}}</span><span class="old" v-show="j.oldPrice">&yen;{{j.oldPrice}}</span>
             	  	</div>
                   <!-- 点击购买数量按钮 -->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food"></cartcontrol>
+                    <cartcontrol :food="j"></cartcontrol>
                   </div>
             	  </div>
             	</li>
@@ -40,7 +40,7 @@
         </ul>
   	</div>
     <!-- 购物车组件 -->
-    <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcar>
+    <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" :selectFoods="selectFoods"></shopcar>
   </div>
   
 </template>
@@ -76,6 +76,17 @@
           // if (this.scrollY >= 0 && this.scrollY < this.listHeight[1]) { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 100) } else { this.menuScroll.scrollToElement(this.$refs.goodMenu[i], 100) }
         }
         return 0
+      },
+      selectFoods () { // 将被cartcontrol组件选择的输出给shopcar
+        let selectFoods = []
+        this.goods.forEach((i) => {  // 遍历goods，goods为服务器传来的
+          i.foods.forEach((j) => {  // 遍历拿到的food,看里面又没有count属性，count为cartcontrol Vue.set()的购买数量
+            if (j.count) {
+              selectFoods.push(j) // 如果有数量则push到给定的数组中并输出
+            }
+          })
+        })
+        return selectFoods
       }
     },
     methods: {

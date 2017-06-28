@@ -1,8 +1,9 @@
 <template>
   <div class="cartcontrol">
-  	<div class="cart-decrease decrease" v-show="food.count>0" @click="decreaseCart($event)">
-  	  
-  	</div>
+    <transition name="move">
+	  	<div class="cart-decrease decrease" v-show="food.count>0" @click="decreaseCart($event)"> 
+	  	</div>
+	</transition>
   	<div class="cart-count" v-show="food.count>0">
   	  {{food.count}}
   	</div>
@@ -41,7 +42,18 @@ export default {
 .cartcontrol{font-size: 0;}
 .cartcontrol .cart-decrease{display: inline-block;
       line-height: 16px;
-      font-size: 16px;width: 16px;height: 16px;}
+      font-size: 16px;width: 16px;height: 16px;
+transform: translate3d(0, 0, 0); /* 硬件加速，动画更流程 */
+transition: all 0.4s linear;
+ transform: rotate(0);
+  }
+  .move-enter-active,.move-leave-active{
+        transition: all 0.4s linear;}
+  .move-enter, .move-leave-active{
+        opacity: 0;
+         transform: translate3d(24px, 0, 0);
+        transform: rotate(180deg);
+      }
 .cartcontrol .cart-count{display: inline-block;
       vertical-align: top;
       width: 24px;
