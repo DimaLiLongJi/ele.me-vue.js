@@ -25,6 +25,7 @@ export default {
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1) // 引用vue.set(this.data,key,value)可以设置data里的属性
       } else { this.food.count ++ }
+      this.$emit('add', event.target) // 派发事件，将dom对象作为参数传入自定义事件add,add为自定义事件
     },
     decreaseCart (event) {
       if (!event._constructed) { return }
@@ -43,25 +44,14 @@ export default {
 .cartcontrol .cart-decrease{display: inline-block;
       line-height: 16px;
       font-size: 16px;width: 16px;height: 16px;
-transform: translate3d(0, 0, 0); /* 硬件加速，动画更流程 */
-transition: all 0.4s linear;
- transform: rotate(0);
+      transition:all 0.4s linear;
+      transform:translate3d(0,0,0); /* 硬件加速，动画更流程 */
+      transform:rotate(0); 
   }
-  .move-enter-active,.move-leave-active{
-        transition: all 0.4s linear;}
-  .move-enter, .move-leave-active{
-        opacity: 0;
-         transform: translate3d(24px, 0, 0);
-        transform: rotate(180deg);
-      }
-.cartcontrol .cart-count{display: inline-block;
-      vertical-align: top;
-      width: 24px;
-      line-height: 16px;
-      text-align: center;
-      font-size: 16px;
-      color: rgb(147, 153, 159);height: 16px;}
-.cartcontrol .cart-add{display: inline-block;
-      line-height: 16px;
-      font-size: 16px;width: 16px;height: 16px;}
+/*动画*/
+.move-enter,.move-leave-active{opacity:0;transform:rotate(180deg);transform: translate3d(24px,0,0);}
+.move-enter-active,.move-leave-active{transition:all 0.4s linear;}
+
+.cartcontrol .cart-count{display: inline-block; vertical-align: top; width: 24px; line-height: 16px; text-align: center; font-size: 16px; color: rgb(147, 153, 159);height: 16px;}
+.cartcontrol .cart-add{display: inline-block; line-height: 16px; font-size: 16px;width: 16px;height: 16px;}
 </style>

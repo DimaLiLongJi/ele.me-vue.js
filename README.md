@@ -62,3 +62,9 @@ new BScroll(this.$refs.XXX , {参数} )
 ###2017/6/28
 goods.vue完成，今日知识点：
 通过在父组件设置:data="data"，子组件props:{}引用并改变，可以双向绑定！
+
+###2017/6/29
+小球动画完成，技术栈：<transition @before-enter='xxx'>
+子传父数据： 父上的子组件@自定义事件="functionXXX"
+             子this.$emit(自定义事件,data子传付)//data作为事件方法的参数被传走
+             父：functionXXX (data从子传来) {}

@@ -13,21 +13,38 @@
   	    <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
   	  </div>
   	  <div class="content-right">
-  	  	<div :class="[{'toBuy': totalPrice>minPrice},{'pay': totalPrice<minPrice}]">
+  	  	<div :class="[{'toBuy': totalPrice>=minPrice},{'pay': totalPrice<minPrice}]" @click="buyIt">
   	  	  {{payDesc}}
   	  	</div>
   	  </div>
   	</div>
+    <!-- 小球效果 -->
+      <div class="ball-container">
+        <div v-for="ball in balls">
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
+      </div>
   </div>
 </template>
 
 <script type="text/javascript">
   export default {
-    // data () {
-    //   return {
-    //     countNum: { type: Number } // 用来统计数量，并根据数量改变下方图标
-    //   }
-    // },
+    data () {
+      return {
+        balls: [ // 存储小球,show决定是否显示
+          { show: false }
+          // { show: false },
+          // { show: false },
+          // { show: false },
+          // { show: false }
+        ],
+        dropBalls: []
+      }
+    },
     props: {
       deliveryPrice: { type: Number },
       minPrice: { type: Number },
@@ -43,6 +60,64 @@
         }
       }
     },
+    methods: {
+      buyIt () {
+        if (this.totalPrice >= this.minPrice) { window.alert(`需要付款${this.totalPrice + this.deliveryPrice}元`) }
+      },
+      // 被来自good.vue激活的函数
+      drop (target) {
+        console.log(target)
+        // 遍历balls数组，
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i]
+          if (!ball.show) {
+            ball.show = true // 此项决定小球动画
+            ball.el = target
+            this.dropBalls.push(ball) // show为true的放入drops里
+            return
+          }
+        }
+      },
+      // 动画函数
+      beforeDrop (el) { // 动画开始前
+        // let count = this.balls.length // 5
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i] // ball=balls[5]
+          if (ball.show) {
+            let rect = ball.el.getBoundingClientRect() // 返回元素相对于窗口的偏移 left right
+            let x = rect.left - el.style.left
+            let y = -(window.innerHeight - rect.top - el.style.bottom)
+            // 外层纵向位移
+            el.style.display = ''
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`
+            el.style.transform = `translate3d(0,${y}px,0)`
+            // 里层横向位移
+            let inner = el.getElementsByClassName('inner-hook')[0]
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+            inner.style.transform = `translate3d(${x}px,0,0)`
+          }
+        }
+      },
+      dropping (el) { // 动画开始
+        /* eslint-disable no-unused-vars */
+        // es6不检测下面
+        let rf = el.offsetHeight // 获取el高度
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)'
+          el.style.transform = 'translate3d(0,0,0)'
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = 'translate3d(0,0,0)'
+          inner.style.transform = 'translate3d(0,0,0)'
+        })
+      },
+      afterDrop (el) { // 动画结束后
+        let ball = this.dropBalls.shift() // 移除数组中的第一个元素并返回第一个元素的值
+        if (ball) {
+          ball.show = false
+          el.style.display = 'none'
+        }
+      }
+    },
     computed: {
       totalPrice () { // 计算总价格的一个函数
         let total = 0 // 首选定义一个总价钱
@@ -50,7 +125,6 @@
           if (i.count) { total += i.price * i.count }
           // array.forEach(function (e){e}) 循环数组中的值 累加到total中 可以直接用里面的值,i为每次循环出的i的value
         })
-        console.log({ 'total': total })
         return total
       },
       // bgSelect () {
@@ -63,7 +137,6 @@
         })
         // if (count > 0) { this.src = './shopcarFull.png' } else { this.src = './shopcarEmpty.png' }
         // this.countNum = count
-        console.log({ 'count': count })
         return count
       },
       payDesc () {
@@ -90,4 +163,8 @@
 .shopCar .content .content-left .desc{display:inline-block;vertical-align:top;line-height: 24px;margin:12px 0 0 12px;font-size:12px;color:rgba(255, 255, 255, 0.4);}
 .shopCar .content .content-right{flex: 0 0 105px;width: 105px;}
 .shopCar .content .content-right .pay{height:48px;line-height:48px;text-align:center;font-size:12px;color:rgba(255, 255, 255, 0.4);background-color:#2b333b;}
+
+/*小球效果*/
+.ball{position: fixed; left: 32px; bottom: 22px; z-index: 200; transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41);}
+.inner{width: 16px; height: 16px; border-radius: 50%; background: rgb(0, 160, 220); transition: all 0.4s linear;}
 </style>

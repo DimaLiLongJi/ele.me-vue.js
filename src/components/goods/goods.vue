@@ -31,7 +31,7 @@
             	  	</div>
                   <!-- 点击购买数量按钮 -->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="j"></cartcontrol>
+                    <cartcontrol @add="addFood" :food="j"></cartcontrol>
                   </div>
             	  </div>
             	</li>
@@ -40,7 +40,7 @@
         </ul>
   	</div>
     <!-- 购物车组件 -->
-    <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" :selectFoods="selectFoods"></shopcar>
+    <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" :selectFoods="selectFoods" ref="shopcart"></shopcar>
   </div>
   
 </template>
@@ -120,7 +120,23 @@
         let foodList = this.$refs.foodList
         let el = foodList[i]
         this.foodsScroll.scrollToElement(el, 300) // BScroll.scrollToElement(显示的li,time)  BScroll=new BScroll(整个div,{click:true,probeType:3}) 可以点击并监听
+      },
+      addFood (target) { // 自定义事件add的方法，targer为再组件中用vm.$emit('自定义事件add',参数)
+        // this._drop(target) // tatget为参数传入
+        this.$nextTick(() => { // 异步，提高优化
+          this.$refs.shopcart.drop(target) // 调用shopcar中的方法drop()
+        })
       }
+      // _drop (target) { // 被自定义事件$add的方法addFood调用
+      //   this.$nextTick(() => {
+      //     this.$refs.shopcart.drop(target) // 调用shopcar中的方法drop()
+      //   })
+      // }
+      // addFood (target) {
+      //   this.$nextTick(() => {
+      //     this.$refs.shopcart.drop(target)
+      //   })
+      // }
     },
     created () { // 创建vue实例后出发
       this.$http.get('./api/goods').then((response) => {
