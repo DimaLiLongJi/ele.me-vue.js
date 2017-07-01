@@ -68,3 +68,6 @@ goods.vue完成，今日知识点：
 子传父数据： 父上的子组件@自定义事件="functionXXX"
              子this.$emit(自定义事件,data子传付)//data作为事件方法的参数被传走
              父：functionXXX (data从子传来) {}
+
+###2017/6/30
+商品详情，父组件可以通过this.$refs.XXX.function来驱动子组件的方法

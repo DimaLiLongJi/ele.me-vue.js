@@ -1,4 +1,5 @@
 <template>
+<div> 
   <div class="goods">
     <!-- 左侧滚动列表 -->
   	<div class="menu-wrapper" ref="menuWrapper">
@@ -16,7 +17,7 @@
             <h1 class="title">{{i.name}}</h1>
             <ul>
               <!-- 具体食物 j为.foods的循环 i.foods为里面的吃的-->
-            	<li v-for="j in i.foods" class="food-item border1px">
+            	<li v-for="j in i.foods" class="food-item border1px" @click.stop.prevent="selectFood(j, $event)">
             	  <div class="icon">
             	  	<img :src="j.icon" width="57" height="57">
             	  </div>
@@ -31,7 +32,7 @@
             	  	</div>
                   <!-- 点击购买数量按钮 -->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol @add="addFood" :food="j"></cartcontrol>
+                    <cartcontrol @add.stop.prevent="addFood" :food="j"></cartcontrol>
                   </div>
             	  </div>
             	</li>
@@ -43,24 +44,30 @@
     <shopcar :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" :selectFoods="selectFoods" ref="shopcart"></shopcar>
   </div>
   
+  <!-- 商品展示页food.vue  selectFood为组件点击产生的data -->
+  <food :food="foodContent" ref="food"></food>
+</div>
 </template>
 
 <script type="text/javascript">
   import BScroll from 'better-scroll'
   import shopcar from '../shopcar/shopcar.vue'
   import cartcontrol from '../cartControl/cartControl.vue'
+  import food from '../food/food.vue'
   const errOK = 0
   export default {
     data () {
       return {
         goods: [],
         listHeight: [], // 用来存储右侧滚动区每个区间间的高度
-        scrollY: 0 // 监听右侧滚动的y轴
+        scrollY: 0, // 监听右侧滚动的y轴
+        foodContent: {} // 存储点击产生的数据，传输给详情页
       }
     },
     components: {
       shopcar: shopcar,
-      cartcontrol: cartcontrol
+      cartcontrol: cartcontrol,
+      food: food
     },
     props: {
       seller: { type: Object }
@@ -91,8 +98,8 @@
     },
     methods: {
       _initScroll () {
-      // this.$els.XXX 是vue的dom获取v-el:XXX
-      // vue2 是 this.$refs.xxx ref="xxx"
+        // this.$els.XXX 是vue的dom获取v-el:XXX
+        // vue2 是 this.$refs.xxx ref="xxx"
         this.menuScroll = new BScroll(this.$refs.menuWrapper, { click: true })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           probeType: 3,
@@ -123,20 +130,15 @@
       },
       addFood (target) { // 自定义事件add的方法，targer为再组件中用vm.$emit('自定义事件add',参数)
         // this._drop(target) // tatget为参数传入
-        this.$nextTick(() => { // 异步，提高优化
+        this.$nextTick(() => { // 异步进行，优化用户体验
           this.$refs.shopcart.drop(target) // 调用shopcar中的方法drop()
         })
+      },
+      selectFood (i, event) { // 点击选择的详情数据
+        if (!event._constructed) { return }
+        this.foodContent = i
+        this.$refs.food.show() // 父组件可以调用子组件的方法
       }
-      // _drop (target) { // 被自定义事件$add的方法addFood调用
-      //   this.$nextTick(() => {
-      //     this.$refs.shopcart.drop(target) // 调用shopcar中的方法drop()
-      //   })
-      // }
-      // addFood (target) {
-      //   this.$nextTick(() => {
-      //     this.$refs.shopcart.drop(target)
-      //   })
-      // }
     },
     created () { // 创建vue实例后出发
       this.$http.get('./api/goods').then((response) => {

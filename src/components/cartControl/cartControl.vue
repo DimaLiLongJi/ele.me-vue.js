@@ -1,13 +1,13 @@
 <template>
   <div class="cartcontrol">
     <transition name="move">
-	  	<div class="cart-decrease decrease" v-show="food.count>0" @click="decreaseCart($event)"> 
+	  	<div class="cart-decrease decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart($event)"> 
 	  	</div>
 	</transition>
   	<div class="cart-count" v-show="food.count>0">
   	  {{food.count}}
   	</div>
-  	<div class="cart-add add" @click="addCart($event)">
+  	<div class="cart-add add" @click.stop.prevent="addCart($event)">
     
   	</div>
   </div>
@@ -20,7 +20,7 @@ export default {
     food: { type: Object }
   },
   methods: {
-    addCart (event) {
+    addCart (event) { // 改变父组件food的值，负组件也会相应改变
       if (!event._constructed) { return } // 动端触发两次，已经判断了e._constructed，如果不判断是移动端两次PC端3次
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1) // 引用vue.set(this.data,key,value)可以设置data里的属性
