@@ -32,7 +32,7 @@
             	  	</div>
                   <!-- 点击购买数量按钮 -->
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol @add.stop.prevent="addFood" :food="j"></cartcontrol>
+                    <cartcontrol @add="addFood" :food="j"></cartcontrol>
                   </div>
             	  </div>
             	</li>

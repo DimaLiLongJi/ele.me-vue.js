@@ -15,7 +15,7 @@
   	  </div>
   	  <div class="content-right">
         <!-- @event.stop.prevent 是vue的方法，组织事件冒泡和默认事件 -->
-  	  	<div :class="[{'toBuy': totalPrice>=minPrice},{'pay': totalPrice<minPrice}]" @click.stop.prevent="buyIt">
+  	  	<div :class="[{'toBuy': totalPrice>=minPrice},{'pay': totalPrice<minPrice}]" @click="buyIt">
   	  	  {{payDesc}}
   	  	</div>
   	  </div>

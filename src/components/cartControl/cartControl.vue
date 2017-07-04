@@ -8,7 +8,6 @@
   	  {{food.count}}
   	</div>
   	<div class="cart-add add" @click.stop.prevent="addCart($event)">
-    
   	</div>
   </div>
 </template>
